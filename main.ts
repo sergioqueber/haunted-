@@ -9,10 +9,10 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        . . . . . . . 7 . 7 7 . . . . . 
-        . . . . . . 7 7 7 7 7 . . . . . 
-        . . . . . . . 7 7 7 . . . . . . 
-        . . . . . . . 7 . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . f . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -26,11 +26,11 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
-        . . . . . . . 3 3 . . . . . . . 
-        . . . . . . 3 . . 3 . . . . . . 
-        . . . . . . 3 . . 3 3 . . . . . 
-        . . . . . 3 . 3 3 3 3 . . . . . 
-        . . . . . 3 3 3 3 3 . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . f . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
         . . . . . . . . . . . . . . . . 
@@ -43,16 +43,90 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
 controller.left.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite.setImage(assets.image`Teacher left`)
 })
+info.onCountdownEnd(function () {
+    game.over(false)
+})
 controller.right.onEvent(ControllerButtonEvent.Pressed, function () {
     mySprite.setImage(assets.image`Teacher right`)
 })
+function clear_everything () {
+    info.stopCountdown()
+    info.setScore(0)
+    mySprite.destroy()
+    tiles.setTilemap(tilemap`level4`)
+    mySprite = sprites.create(assets.image`Teacher right`, SpriteKind.Player)
+    mySprite.ay = 300
+    Boss = sprites.create(assets.image`Boss`, SpriteKind.Player)
+    tiles.placeOnTile(Boss, tiles.getTileLocation(9, 3))
+    for (let index = 0; index < 200; index++) {
+        if (projectile.overlapsWith(Boss)) {
+            info.player1.changeScoreBy(1)
+        }
+        Boss_projectile = sprites.createProjectileFromSprite(img`
+            . . . b b b b b b b b b . . . . 
+            . . b 1 d d d d d d d 1 b . . . 
+            . b 1 1 1 1 1 1 1 1 1 1 1 b . . 
+            . b d b c c c c c c c b d b . . 
+            . b d c 6 6 6 6 6 6 6 c d b . . 
+            . b d c 6 d 6 6 6 6 6 c d b . . 
+            . b d c 6 6 6 6 6 6 6 c d b . . 
+            . b d c 6 6 6 6 6 6 6 c d b . . 
+            . b d c 6 6 6 6 6 6 6 c d b . . 
+            . b d c c c c c c c c c d b . . 
+            . c b b b b b b b b b b b c . . 
+            c b c c c c c c c c c c c b c . 
+            c 1 d d d d d d d d d d d 1 c . 
+            c 1 d 1 1 d 1 1 d 1 1 d 1 1 c . 
+            c b b b b b b b b b b b b b c . 
+            c c c c c c c c c c c c c c c . 
+            `, Boss, randint(-50, -100), randint(-50, 50))
+        Boss_projectile_2 = sprites.createProjectileFromSprite(img`
+            ................................
+            .....111111111..................
+            .....111111111111...............
+            .....11111111111111.............
+            .....11111111111111.............
+            .....111111111111111............
+            .........11111111111............
+            ............11111111............
+            ..............111111............
+            ...............11111............
+            ..111111......111111............
+            ..111111......111111............
+            ..111111....11111111............
+            ..1111111..111111111............
+            ..111111111111111111............
+            ...1111111111111111.............
+            ...11111111111111111............
+            ...111111111111111111...........
+            ....111111111111111111..........
+            ......11111111111111111.........
+            ..............1111111111........
+            ...............1111111111.......
+            ................1111111111......
+            ..................111111111.....
+            ...................111111111....
+            ...................11111111111..
+            ....................11111111111.
+            .....................11111111111
+            ......................1111111111
+            ........................11111111
+            .........................1111111
+            ..........................111111
+            `, Boss, randint(-50, -75), randint(-50, 50))
+        pause(1000)
+    }
+}
 let v5 = 0
 let v4 = 0
 let v3 = 0
 let v2 = 0
 let v1 = 0
-let projectile: Sprite = null
+let Boss_projectile_2: Sprite = null
+let Boss_projectile: Sprite = null
+let Boss: Sprite = null
 let mySprite: Sprite = null
+let projectile: Sprite = null
 let list = [-50, 50]
 scene.setBackgroundImage(img`
     8888888888888888888888888888888888
@@ -77,7 +151,25 @@ scene.setBackgroundImage(img`
     cccccccccccccccccccccccccccccccccc
     `)
 tiles.setTilemap(tilemap`level 1`)
-info.startCountdown(120)
+info.startCountdown(90)
+projectile = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    `, SpriteKind.Projectile)
 mySprite = sprites.create(assets.image`Teacher right`, SpriteKind.Player)
 tiles.placeOnTile(mySprite, tiles.getTileLocation(6, 13))
 scene.cameraFollowSprite(mySprite)
@@ -148,13 +240,32 @@ forever(function () {
     Enemy_5.setVelocity(v5, 50)
 })
 forever(function () {
-    while (mySprite.overlapsWith(Plate)) {
-        mySprite.setImage(assets.image`myImage2`)
-        Plate.setImage(assets.image`myImage1`)
-        pause(5000)
+	
+})
+forever(function () {
+    if (projectile.overlapsWith(Enemy_1)) {
+        Enemy_1.destroy(effects.fire, 1000)
+        info.player1.changeScoreBy(1)
     }
-    if (!(mySprite.overlapsWith(Plate))) {
-        mySprite.setImage(assets.image`Teacher right`)
-        Plate.setImage(assets.image`myImage0`)
+    if (projectile.overlapsWith(Enemy_2)) {
+        Enemy_2.destroy(effects.fire, 1000)
+        info.player1.changeScoreBy(1)
+    }
+    if (projectile.overlapsWith(Enemy_3)) {
+        Enemy_3.destroy(effects.fire, 1000)
+        info.player1.changeScoreBy(1)
+    }
+    if (projectile.overlapsWith(Enemy_4)) {
+        Enemy_4.destroy(effects.fire, 1000)
+        info.player1.changeScoreBy(1)
+    }
+    if (projectile.overlapsWith(Enemy_5)) {
+        Enemy_5.destroy(effects.fire, 1000)
+        info.player1.changeScoreBy(1)
+    }
+})
+forever(function () {
+    if (info.player1.score() == 1) {
+        clear_everything()
     }
 })
