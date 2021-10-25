@@ -1,3 +1,5 @@
+let velocity = 0
+let list = [-50, 50]
 scene.setBackgroundImage(img`
     8888888888888888888888888888888888
     8888888888888888888888888888888888
@@ -45,5 +47,10 @@ tiles.placeOnTile(Enemy_5, tiles.getTileLocation(17, 5))
 Enemy_5.setBounceOnWall(true)
 Enemy_5.setVelocity(50, 0)
 forever(function () {
+    velocity = 0
+})
+forever(function () {
     controller.moveSprite(mySprite)
+    Enemy_4.setVelocity(0, 50)
+    Enemy_4.setVelocity(velocity, 50)
 })
