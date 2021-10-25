@@ -265,7 +265,7 @@ forever(function () {
     }
 })
 forever(function () {
-    if (info.player1.score() == 1) {
+    if (info.player1.score() == 5) {
         clear_everything()
     }
 })
